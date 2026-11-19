@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\V1\FavoriteController;
 use App\Http\Controllers\Api\V1\WatchHistoryController;
 use App\Http\Controllers\Api\V1\DeviceController;
 use App\Http\Controllers\Api\V1\SettingsController;
+use App\Http\Controllers\Api\V1\Admin\AdminDashboardController;
+use App\Http\Controllers\Api\V1\Admin\AdminUserController;
 
 Route::prefix('v1')->group(function () {
     // Auth routes
@@ -57,5 +59,13 @@ Route::prefix('v1')->group(function () {
         Route::get('settings', [SettingsController::class, 'show']);
         Route::put('settings', [SettingsController::class, 'update']);
         Route::post('settings/verify-pin', [SettingsController::class, 'verifyPin']);
+
+        // Admin Management Panel
+        Route::prefix('admin')->middleware('admin')->group(function () {
+            Route::get('stats', [AdminDashboardController::class, 'stats']);
+            Route::get('users', [AdminUserController::class, 'index']);
+            Route::put('users/{id}', [AdminUserController::class, 'update']);
+            Route::delete('users/{id}', [AdminUserController::class, 'destroy']);
+        });
     });
 });

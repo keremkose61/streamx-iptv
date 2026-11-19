@@ -12,6 +12,8 @@ import { LiveTV } from './pages/LiveTV';
 import { EPGGuide } from './pages/EPGGuide';
 import { Favorites } from './pages/Favorites';
 import { History } from './pages/History';
+import { AdminDashboard } from './pages/admin/AdminDashboard';
+import { AdminUsers } from './pages/admin/AdminUsers';
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,8 @@ export const App: React.FC = () => {
             <Route path="/playlists" element={<Playlists />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/history" element={<History />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/users" element={<AdminUsers />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
