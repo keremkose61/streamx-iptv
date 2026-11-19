@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+vendor/
+
+# Environment and sensitive files
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Build outputs
+dist/
+build/
+*.apk
+*.aab
+*.wgt
+*.ipk
+
+# Caches and logs
+*.log
+.phpunit.cache/
+storage/*.key
+.turbo/
+.cache/
+
+# OS files
+.DS_Store
+Thumbs.db

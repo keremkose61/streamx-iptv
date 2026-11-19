@@ -1,0 +1,17 @@
+{
+  "name": "streamx-platform",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Multi-platform media player and playlist management architecture",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "lint": "echo \"Running workspace linting\"",
+    "test": "echo \"Running workspace tests\""
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
