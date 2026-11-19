@@ -9,6 +9,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Settings } from './pages/Settings';
 import { Playlists } from './pages/Playlists';
 import { LiveTV } from './pages/LiveTV';
+import { EPGGuide } from './pages/EPGGuide';
 
 const queryClient = new QueryClient();
 
@@ -31,7 +32,7 @@ export const App: React.FC = () => {
             <Route path="/settings" element={<Settings />} />
             {/* Fallback routes for upcoming modules */}
             <Route path="/live" element={<LiveTV />} />
-            <Route path="/epg" element={<Dashboard />} />
+            <Route path="/epg" element={<EPGGuide />} />
             <Route path="/playlists" element={<Playlists />} />
             <Route path="/favorites" element={<Dashboard />} />
             <Route path="/history" element={<Dashboard />} />

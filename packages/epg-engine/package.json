@@ -1,0 +1,16 @@
+{
+  "name": "@streamx/epg-engine",
+  "version": "0.1.0",
+  "description": "High performance XMLTV parser and timeline scheduler for StreamX IPTV",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "@types/node": "^22.13.4"
+  }
+}
