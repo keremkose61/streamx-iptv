@@ -1,0 +1,18 @@
+{
+  "id": "org.streamx.iptv",
+  "version": "1.0.0",
+  "vendor": "StreamX Team",
+  "type": "web",
+  "main": "index.html",
+  "title": "StreamX IPTV",
+  "icon": "icon.png",
+  "largeIcon": "largeIcon.png",
+  "bgImage": "splash.png",
+  "splashBackground": "#0B0E14",
+  "resolution": "1920x1080",
+  "handlesRelaunch": true,
+  "disableBackHistoryAPI": true,
+  "supportGpuBuffer": true,
+  "requiredMemory": 512,
+  "appDescription": "Enterprise multi-platform IPTV streaming client for LG Smart TV (webOS)"
+}

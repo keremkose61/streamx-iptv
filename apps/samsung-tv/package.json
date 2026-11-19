@@ -1,0 +1,14 @@
+{
+  "name": "@streamx/samsung-tv",
+  "version": "1.0.0",
+  "description": "StreamX IPTV - Samsung Smart TV (Tizen) Web Client",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.js",
+    "package": "tizen package -t wgt -s DefaultSecurityProfile -- ./www",
+    "install:device": "tizen install -n StreamX001.wgt -t target_device",
+    "run:device": "tizen run -p StreamX001.StreamX -t target_device"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
