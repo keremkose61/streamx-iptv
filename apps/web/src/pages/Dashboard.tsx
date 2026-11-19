@@ -1,16 +1,88 @@
 import React from 'react';
 import { useAuthStore } from '../stores/authStore';
-import { Tv, ListPlus, Heart, History, Play, Plus, Zap, ShieldCheck } from 'lucide-react';
+import { apiClient } from '../api/client';
+import { useQuery } from '@tanstack/react-query';
+import { Tv, ListPlus, Heart, History, Play, Plus, Zap, ShieldCheck, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+
+interface DashboardStats {
+  playlistCount: number;
+  channelCount: number;
+  favoriteCount: number;
+  historyCount: number;
+  lastWatchedChannel?: {
+    id: number;
+    name: string;
+    group_title: string;
+    logo_url: string | null;
+  };
+}
 
 export const Dashboard: React.FC = () => {
   const { user } = useAuthStore();
 
+  // Fetch real user statistics
+  const { data: statsData, isLoading } = useQuery<DashboardStats>({
+    queryKey: ['dashboard_stats'],
+    queryFn: async () => {
+      const [playlistsRes, channelsRes, favoritesRes, historyRes] = await Promise.allSettled([
+        apiClient.get('/playlists'),
+        apiClient.get('/channels?per_page=1'),
+        apiClient.get('/favorites'),
+        apiClient.get('/history'),
+      ]);
+
+      const playlists = playlistsRes.status === 'fulfilled' ? playlistsRes.value.data.playlists || [] : [];
+      const channelTotal = channelsRes.status === 'fulfilled' ? channelsRes.value.data.total || 0 : 0;
+      const favorites = favoritesRes.status === 'fulfilled' ? favoritesRes.value.data.favorites || [] : [];
+      const history = historyRes.status === 'fulfilled' ? historyRes.value.data.history || [] : [];
+
+      let lastWatched = undefined;
+      if (history.length > 0 && history[0].channel) {
+        lastWatched = {
+          id: history[0].channel.id,
+          name: history[0].channel.name,
+          group_title: history[0].channel.group_title,
+          logo_url: history[0].channel.logo_url,
+        };
+      }
+
+      return {
+        playlistCount: playlists.length,
+        channelCount: channelTotal,
+        favoriteCount: favorites.length,
+        historyCount: history.length,
+        lastWatchedChannel: lastWatched,
+      };
+    },
+  });
+
   const stats = [
-    { label: 'Kayıtlı Playlist', value: '0', limit: user?.subscription?.max_playlists || 1, icon: ListPlus, color: 'text-blue-400 bg-blue-500/10 border-blue-500/20' },
-    { label: 'Aktif Kanallar', value: '0', icon: Tv, color: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20' },
-    { label: 'Favori Kanallar', value: '0', icon: Heart, color: 'text-pink-400 bg-pink-500/10 border-pink-500/20' },
-    { label: 'Son İzlenenler', value: '0', icon: History, color: 'text-amber-400 bg-amber-500/10 border-amber-500/20' },
+    {
+      label: 'Kayıtlı Playlist',
+      value: isLoading ? '...' : String(statsData?.playlistCount || 0),
+      limit: user?.subscription?.max_playlists || 1,
+      icon: ListPlus,
+      color: 'text-blue-400 bg-blue-500/10 border-blue-500/20'
+    },
+    {
+      label: 'Aktif Kanallar',
+      value: isLoading ? '...' : String(statsData?.channelCount || 0),
+      icon: Tv,
+      color: 'text-indigo-400 bg-indigo-500/10 border-indigo-500/20'
+    },
+    {
+      label: 'Favori Kanallar',
+      value: isLoading ? '...' : String(statsData?.favoriteCount || 0),
+      icon: Heart,
+      color: 'text-pink-400 bg-pink-500/10 border-pink-500/20'
+    },
+    {
+      label: 'Son İzlenenler',
+      value: isLoading ? '...' : String(statsData?.historyCount || 0),
+      icon: History,
+      color: 'text-amber-400 bg-amber-500/10 border-amber-500/20'
+    },
   ];
 
   return (
@@ -50,6 +122,29 @@ export const Dashboard: React.FC = () => {
         <div className="absolute right-0 bottom-0 top-0 w-1/3 bg-gradient-to-l from-indigo-500/10 to-transparent pointer-events-none" />
       </div>
 
+      {/* Continue Watching Banner (if user has history) */}
+      {statsData?.lastWatchedChannel && (
+        <div className="p-5 rounded-2xl bg-indigo-950/40 border border-indigo-500/30 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400">
+              <Tv className="w-6 h-6" />
+            </div>
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-indigo-400">İzlemeye Devam Et</p>
+              <p className="text-lg font-bold text-white">{statsData.lastWatchedChannel.name}</p>
+              <p className="text-xs text-slate-400">{statsData.lastWatchedChannel.group_title || 'Genel'}</p>
+            </div>
+          </div>
+          <Link
+            to="/live"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-md shadow-indigo-600/20"
+          >
+            <span>Yayına Dön</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
+        </div>
+      )}
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s, idx) => {
@@ -60,7 +155,7 @@ export const Dashboard: React.FC = () => {
                 <p className="text-xs text-slate-400 font-medium">{s.label}</p>
                 <div className="text-2xl font-bold text-white mt-1">
                   {s.value}
-                  {s.limit && <span className="text-xs text-slate-500 font-normal"> / {s.limit}</span>}
+                  {s.limit !== undefined && <span className="text-xs text-slate-500 font-normal"> / {s.limit}</span>}
                 </div>
               </div>
               <div className={`p-3 rounded-xl border ${s.color}`}>
@@ -99,24 +194,24 @@ export const Dashboard: React.FC = () => {
 
         <div className="p-6 rounded-2xl bg-slate-900/60 border border-slate-800">
           <div className="flex items-center gap-3 mb-4">
-            <Tv className="w-5 h-5 text-indigo-400" />
-            <h3 className="font-bold text-slate-100">Oynatıcı ve Akış Desteği</h3>
+            <Zap className="w-5 h-5 text-indigo-400" />
+            <h3 className="font-bold text-slate-100">Abonelik & Kota Bilgisi</h3>
           </div>
           <p className="text-xs text-slate-400 leading-relaxed mb-4">
-            Platform çoklu oynatıcı motoru mimarisine sahiptir. HLS (m3u8) ve DASH (mpd) canlı yayın akışları otomatik tespit edilerek oynatılır.
+            Mevcut paketiniz ve kullanım limitleriniz aşağıda listelenmiştir. Daha fazla çalma listesi ve cihaz hakkı için paketinizi yükseltebilirsiniz.
           </p>
           <div className="space-y-2 text-xs">
             <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400">HLS.js Entegrasyonu</span>
-              <span className="text-indigo-400 font-medium">Hazır (player-core)</span>
+              <span className="text-slate-400">Paket Seviyesi</span>
+              <span className="text-indigo-400 font-semibold uppercase">{user?.subscription?.tier || 'Free'}</span>
             </div>
             <div className="flex justify-between py-1.5 border-b border-slate-800/60">
-              <span className="text-slate-400">XMLTV EPG Eşleme</span>
-              <span className="text-indigo-400 font-medium">Hazır (epg-engine)</span>
+              <span className="text-slate-400">İzin Verilen Playlist Limiti</span>
+              <span className="text-slate-200 font-medium">{user?.subscription?.max_playlists || 1} Adet</span>
             </div>
             <div className="flex justify-between py-1.5">
-              <span className="text-slate-400">Tampon Süresi</span>
-              <span className="text-slate-200 font-medium">{user?.settings?.buffer_length_seconds || 30} saniye</span>
+              <span className="text-slate-400">Eşzamanlı Cihaz Limiti</span>
+              <span className="text-slate-200 font-medium">{user?.subscription?.max_devices || 1} Cihaz</span>
             </div>
           </div>
         </div>
