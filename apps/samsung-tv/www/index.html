@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>StreamX IPTV - Samsung Smart TV</title>
+  
+  <!-- Tizen TV WebAPIs (Loaded on Tizen OS) -->
+  <script type="text/javascript" src="$WEBAPIS/webapis/webapis.js"></script>
+
+  <!-- HLS.js for Live Streaming -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.8/dist/hls.min.js"></script>
+
+  <!-- TV 10-Foot Styles -->
+  <link rel="stylesheet" href="css/tv-style.css">
+</head>
+<body>
+
+  <!-- Fullscreen Video Element -->
+  <div id="player-container">
+    <video id="tv-video" playsinline></video>
+  </div>
+
+  <!-- Loading / Buffering Spinner -->
+  <div id="buffer-spinner" class="buffer-spinner">
+    <div class="spinner-circle"></div>
+    <span style="font-weight: 700; font-size: 18px;">Yayın Yükleniyor...</span>
+  </div>
+
+  <!-- Direct Channel Jump Number Box (e.g. CH 12) -->
+  <div id="direct-jump-box">CH 1</div>
+
+  <!-- Main 10-Foot UI Overlay -->
+  <div id="ui-overlay">
+    <!-- Header -->
+    <header class="tv-header">
+      <div class="brand-wrapper">
+        <div class="brand-logo">
+          <svg viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h16m-7 6h7"/>
+          </svg>
+        </div>
+        <div class="brand-title">Stream<span>X</span> IPTV</div>
+      </div>
+      <div class="header-status">
+        <div class="badge-live">CANLI YAYIN</div>
+        <div>Tizen OS 1080p</div>
+        <div id="clock-display" class="clock-display">12:00</div>
+      </div>
+    </header>
+
+    <!-- Content Layout -->
+    <div class="tv-content-layout">
+      <!-- Left Sidebar -->
+      <aside class="tv-sidebar">
+        <div class="nav-item active focusable" data-tab="live" data-nav-group="sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="7" width="20" height="15" rx="2" ry="2"/>
+            <polyline points="17 2 12 7 7 2"/>
+          </svg>
+          <span>Canlı TV</span>
+        </div>
+        <div class="nav-item focusable" data-tab="favorites" data-nav-group="sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span>Favoriler</span>
+        </div>
+        <div class="nav-item focusable" data-tab="epg" data-nav-group="sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span>EPG Rehber</span>
+        </div>
+        <div class="nav-item focusable" data-tab="settings" data-nav-group="sidebar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+          </svg>
+          <span>Ayarlar</span>
+        </div>
+        <div class="nav-item focusable" data-tab="exit" data-nav-group="sidebar" style="margin-top: auto; color: #ef4444;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+          <span>Çıkış</span>
+        </div>
+      </aside>
+
+      <!-- Main Dynamic Content Panel -->
+      <main class="tv-main-panel">
+        <div id="category-filter-bar" class="category-filter-bar"></div>
+        <div id="channel-grid" class="channel-grid"></div>
+      </main>
+    </div>
+
+    <!-- Remote Legend Footer -->
+    <footer class="remote-legend">
+      <div class="legend-key"><span class="key-badge">◀/▶/▲/▼</span><span>Gezin</span></div>
+      <div class="legend-key"><span class="key-badge">OK</span><span>Seç / İzle</span></div>
+      <div class="legend-key"><span class="key-badge">CH +/-</span><span>Hızlı Kanal</span></div>
+      <div class="legend-key"><span class="key-badge red">Kırmızı</span><span>Bilgi (OSD)</span></div>
+      <div class="legend-key"><span class="key-badge green">Yeşil</span><span>Kategoriler</span></div>
+      <div class="legend-key"><span class="key-badge yellow">Sarı</span><span>Favori Ekle/Çıkar</span></div>
+      <div class="legend-key"><span class="key-badge blue">Mavi</span><span>Yenile</span></div>
+      <div class="legend-key"><span class="key-badge">GERİ</span><span>Geri / Tam Ekran</span></div>
+    </footer>
+  </div>
+
+  <!-- On-Screen Display (OSD) Channel Banner -->
+  <div id="tv-osd" class="osd-hidden">
+    <div class="osd-top">
+      <div class="osd-channel-info">
+        <div id="osd-num" class="osd-num">001</div>
+        <div class="osd-title-group">
+          <div id="osd-title" class="osd-title">Kanal Adı</div>
+          <div id="osd-category" class="osd-category">Kategori</div>
+        </div>
+      </div>
+      <div class="osd-tech-badges">
+        <div id="osd-res-badge" class="osd-badge">1080p50 FHD</div>
+        <div class="osd-badge">H.264 / AAC</div>
+        <div class="osd-badge">CANLI</div>
+      </div>
+    </div>
+    <div class="osd-epg">
+      <div class="epg-titles">
+        <div id="osd-now" class="epg-now">Şimdi: Canlı Yayın Programı</div>
+        <div id="osd-next" class="epg-next">Sonraki: Akşam Kuşağı (20:00)</div>
+      </div>
+      <div class="epg-progress-bar">
+        <div class="epg-progress-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exit Confirmation Modal Dialog -->
+  <div id="exit-modal" class="tv-modal hidden-modal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-title">StreamX IPTV'den Çıkış</div>
+      <div class="modal-desc">Uygulamadan çıkmak ve TV ana ekranına dönmek istiyor musunuz?</div>
+      <div class="modal-actions">
+        <button class="btn-action focusable" onclick="window.TvApplication.closeExitConfirm()">Vazgeç</button>
+        <button class="btn-action btn-danger focusable" onclick="window.TvApplication.confirmExit()">Çıkış Yap</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/spatial-navigation.js"></script>
+  <script src="js/tizen-adapter.js"></script>
+  <script src="js/tv-player.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

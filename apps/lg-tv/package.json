@@ -1,0 +1,15 @@
+{
+  "name": "@streamx/lg-tv",
+  "version": "1.0.0",
+  "description": "StreamX IPTV - LG Smart TV (webOS) Web Client",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.js",
+    "package": "ares-package ./www -o ./dist",
+    "install:device": "ares-install ./dist/org.streamx.iptv_1.0.0_all.ipk",
+    "launch:device": "ares-launch org.streamx.iptv",
+    "inspect:device": "ares-inspect org.streamx.iptv"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}
