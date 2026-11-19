@@ -1,0 +1,16 @@
+{
+  "name": "@streamx/playlist-engine",
+  "version": "0.1.0",
+  "description": "High-performance streaming M3U/M3U8 parser for StreamX IPTV",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "@types/node": "^22.13.4"
+  }
+}

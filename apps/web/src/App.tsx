@@ -7,6 +7,7 @@ import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
 import { Settings } from './pages/Settings';
+import { Playlists } from './pages/Playlists';
 
 const queryClient = new QueryClient();
 
@@ -30,7 +31,7 @@ export const App: React.FC = () => {
             {/* Fallback routes for upcoming modules */}
             <Route path="/live" element={<Dashboard />} />
             <Route path="/epg" element={<Dashboard />} />
-            <Route path="/playlists" element={<Dashboard />} />
+            <Route path="/playlists" element={<Playlists />} />
             <Route path="/favorites" element={<Dashboard />} />
             <Route path="/history" element={<Dashboard />} />
           </Route>
