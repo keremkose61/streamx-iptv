@@ -18,7 +18,8 @@ import {
   Radio,
   Sliders,
   ChevronRight,
-  List
+  List,
+  Heart
 } from 'lucide-react';
 
 interface Channel {
@@ -82,10 +83,33 @@ export const LiveTV: React.FC = () => {
     }
   }, [channels, selectedChannel]);
 
+  // Fetch Favorite IDs
+  const { data: favoritesData, refetch: refetchFavorites } = useQuery<{ favorites: { channel_id: number }[] }>({
+    queryKey: ['favorites'],
+    queryFn: async () => {
+      const res = await apiClient.get('/favorites');
+      return res.data;
+    },
+  });
+
+  const favoriteIds = new Set((favoritesData?.favorites || []).map((f) => f.channel_id));
+
+  const toggleFavorite = async (channelId: number) => {
+    try {
+      await apiClient.post(`/favorites/${channelId}`);
+      refetchFavorites();
+    } catch {
+      // ignore
+    }
+  };
+
   // Initialize and load stream
   const loadStream = useCallback((channel: Channel) => {
     if (!videoRef.current) return;
     setErrorMessage(null);
+
+    // Record watch history silently
+    apiClient.post(`/history/${channel.id}`).catch(() => {});
 
     if (playerRef.current) {
       playerRef.current.destroy();
@@ -255,15 +279,30 @@ export const LiveTV: React.FC = () => {
               <List className="w-5 h-5" />
             </button>
             {selectedChannel && (
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-                  <span className="text-xs uppercase font-bold tracking-wider text-red-400">CANLI YAYIN</span>
-                  <span className="text-xs text-slate-400 font-medium px-2 py-0.5 rounded bg-slate-800/80 border border-slate-700">
-                    {selectedChannel.group_title}
-                  </span>
+              <div className="flex items-center gap-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                    <span className="text-xs uppercase font-bold tracking-wider text-red-400">CANLI YAYIN</span>
+                    <span className="text-xs text-slate-400 font-medium px-2 py-0.5 rounded bg-slate-800/80 border border-slate-700">
+                      {selectedChannel.group_title}
+                    </span>
+                  </div>
+                  <h2 className="text-lg font-bold text-white tracking-tight mt-0.5">{selectedChannel.name}</h2>
                 </div>
-                <h2 className="text-lg font-bold text-white tracking-tight mt-0.5">{selectedChannel.name}</h2>
+                <button
+                  onClick={() => toggleFavorite(selectedChannel.id)}
+                  title="Favorilere Ekle / Çıkar"
+                  className="p-2 rounded-xl bg-slate-900/80 hover:bg-slate-800 border border-slate-700/50 transition"
+                >
+                  <Heart
+                    className={`w-5 h-5 transition ${
+                      favoriteIds.has(selectedChannel.id)
+                        ? 'text-pink-500 fill-pink-500'
+                        : 'text-slate-400 hover:text-pink-400'
+                    }`}
+                  />
+                </button>
               </div>
             )}
           </div>
@@ -467,6 +506,16 @@ export const LiveTV: React.FC = () => {
                         <div className={`text-[10px] truncate mt-0.5 ${isActive ? 'text-indigo-200' : 'text-slate-500'}`}>
                           {ch.group_title}
                         </div>
+                      </div>
+                      <div
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(ch.id);
+                        }}
+                        className="p-1 rounded-lg hover:bg-slate-700/50 text-slate-400 hover:text-pink-400 cursor-pointer"
+                        title="Favori"
+                      >
+                        <Heart className={`w-3.5 h-3.5 ${favoriteIds.has(ch.id) ? 'text-pink-500 fill-pink-500' : ''}`} />
                       </div>
                       {isActive && <ChevronRight className="w-4 h-4 shrink-0" />}
                     </button>

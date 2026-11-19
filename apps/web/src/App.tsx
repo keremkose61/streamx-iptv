@@ -10,6 +10,8 @@ import { Settings } from './pages/Settings';
 import { Playlists } from './pages/Playlists';
 import { LiveTV } from './pages/LiveTV';
 import { EPGGuide } from './pages/EPGGuide';
+import { Favorites } from './pages/Favorites';
+import { History } from './pages/History';
 
 const queryClient = new QueryClient();
 
@@ -34,8 +36,8 @@ export const App: React.FC = () => {
             <Route path="/live" element={<LiveTV />} />
             <Route path="/epg" element={<EPGGuide />} />
             <Route path="/playlists" element={<Playlists />} />
-            <Route path="/favorites" element={<Dashboard />} />
-            <Route path="/history" element={<Dashboard />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/history" element={<History />} />
           </Route>
 
           <Route path="*" element={<Navigate to="/" replace />} />
