@@ -1,0 +1,18 @@
+{
+  "name": "@streamx/player-core",
+  "version": "0.1.0",
+  "description": "Unified HLS/DASH/Native player abstraction for StreamX IPTV",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "hls.js": "^1.5.20"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3",
+    "@types/node": "^22.13.4"
+  }
+}

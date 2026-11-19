@@ -8,6 +8,7 @@ import { Register } from './pages/Register';
 import { Dashboard } from './pages/Dashboard';
 import { Settings } from './pages/Settings';
 import { Playlists } from './pages/Playlists';
+import { LiveTV } from './pages/LiveTV';
 
 const queryClient = new QueryClient();
 
@@ -29,7 +30,7 @@ export const App: React.FC = () => {
             <Route path="/" element={<Dashboard />} />
             <Route path="/settings" element={<Settings />} />
             {/* Fallback routes for upcoming modules */}
-            <Route path="/live" element={<Dashboard />} />
+            <Route path="/live" element={<LiveTV />} />
             <Route path="/epg" element={<Dashboard />} />
             <Route path="/playlists" element={<Playlists />} />
             <Route path="/favorites" element={<Dashboard />} />

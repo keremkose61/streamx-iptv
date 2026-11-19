@@ -12,6 +12,11 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@streamx/player-core": ["../../packages/player-core/src/index.ts"],
+      "@streamx/playlist-engine": ["../../packages/playlist-engine/src/index.ts"]
+    },
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
