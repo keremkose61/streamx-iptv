@@ -1,5 +1,6 @@
 @echo off
-title StreamX IPTV - Web Client (Vite)
+chcp 65001 >nul
+title StreamX IPTV - Web Client (Port 5173)
 cd /d "%~dp0apps\web"
 
 echo ==============================================================
