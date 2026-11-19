@@ -12,6 +12,7 @@ import { LiveTV } from './pages/LiveTV';
 import { EPGGuide } from './pages/EPGGuide';
 import { Favorites } from './pages/Favorites';
 import { History } from './pages/History';
+import { Pricing } from './pages/Pricing';
 import { AdminDashboard } from './pages/admin/AdminDashboard';
 import { AdminUsers } from './pages/admin/AdminUsers';
 
@@ -40,6 +41,7 @@ export const App: React.FC = () => {
             <Route path="/playlists" element={<Playlists />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/history" element={<History />} />
+            <Route path="/pricing" element={<Pricing />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/users" element={<AdminUsers />} />
           </Route>

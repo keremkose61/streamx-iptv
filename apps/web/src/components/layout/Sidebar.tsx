@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuthStore } from '../../stores/authStore';
-import { LayoutDashboard, Tv, Calendar, ListPlus, Heart, History, Settings, Shield } from 'lucide-react';
+import { LayoutDashboard, Tv, Calendar, ListPlus, Heart, History, Settings, Shield, CreditCard } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
   const { user } = useAuthStore();
@@ -13,6 +13,7 @@ export const Sidebar: React.FC = () => {
     { to: '/playlists', label: 'Playlistler', icon: ListPlus },
     { to: '/favorites', label: 'Favoriler', icon: Heart },
     { to: '/history', label: 'İzleme Geçmişi', icon: History },
+    { to: '/pricing', label: 'Paketler & Lisans', icon: CreditCard },
     { to: '/settings', label: 'Ayarlar', icon: Settings },
   ];
 

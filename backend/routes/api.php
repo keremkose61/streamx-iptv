@@ -9,6 +9,7 @@ use App\Http\Controllers\Api\V1\FavoriteController;
 use App\Http\Controllers\Api\V1\WatchHistoryController;
 use App\Http\Controllers\Api\V1\DeviceController;
 use App\Http\Controllers\Api\V1\SettingsController;
+use App\Http\Controllers\Api\V1\SubscriptionController;
 use App\Http\Controllers\Api\V1\Admin\AdminDashboardController;
 use App\Http\Controllers\Api\V1\Admin\AdminUserController;
 
@@ -59,6 +60,12 @@ Route::prefix('v1')->group(function () {
         Route::get('settings', [SettingsController::class, 'show']);
         Route::put('settings', [SettingsController::class, 'update']);
         Route::post('settings/verify-pin', [SettingsController::class, 'verifyPin']);
+
+        // Subscriptions & Licensing
+        Route::get('subscriptions/plans', [SubscriptionController::class, 'plans']);
+        Route::get('subscriptions/current', [SubscriptionController::class, 'current']);
+        Route::post('subscriptions/checkout', [SubscriptionController::class, 'checkout']);
+        Route::post('subscriptions/upgrade', [SubscriptionController::class, 'upgrade']);
 
         // Admin Management Panel
         Route::prefix('admin')->middleware('admin')->group(function () {
