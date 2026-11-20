@@ -11,6 +11,7 @@ export default defineConfig({
     },
   },
   server: {
+    host: true, // Listen on all network interfaces (0.0.0.0) so TV / phone can connect
     port: 5173,
     open: true,
     proxy: {
