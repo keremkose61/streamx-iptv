@@ -12,10 +12,13 @@ vendor/
 # Build outputs
 dist/
 build/
+bin/
+obj/
 *.apk
 *.aab
 *.wgt
 *.ipk
+*.exe
 
 # Caches and logs
 *.log

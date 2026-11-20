@@ -6,6 +6,14 @@ StreamX IPTV, kullanıcıların kendilerine ait M3U/M3U8 çalma listelerini ve X
 
 ---
 
+## 📥 Windows İndirilebilir Sürüm (.exe)
+
+Windows kullanıcıları hiçbir geliştirme ortamına ihtiyaç duymadan doğrudan resmi GitHub yayınından tek parça `.exe` dosyasını indirip çalıştırabilir:
+
+🚀 **[StreamX-IPTV.exe İndir (GitHub Releases v1.0.1)](https://github.com/keremkose61/streamx-iptv/releases/download/v1.0.1/StreamX-IPTV.exe)**
+
+---
+
 ## Desteklenen Platformlar
 
 | Platform | İstemci Teknolojisi | Oynatıcı Motoru | UI Deneyimi | Paketleme Formatı |
